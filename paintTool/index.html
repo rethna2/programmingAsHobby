@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      svg {
+        border: 1px solid blue;
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      width="500"
+      height="300"
+      id="canvas"
+      stroke="black"
+      stroke-width="5"
+      fill="none"
+    ></svg>
+
+    <div>
+      <button id="path">Pencil</button>
+      <button id="line">Line</button>
+      <button id="ellipse">Ellipse</button>
+      <button id="rect">Rectangle</button>
+      <button id="clear">Clear</button>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("canvas");
+
+      let drawType = "path";
+
+      let buttons = ["path", "line", "ellipse", "rect"];
+
+      for (let i = 0; i < buttons.length; i++) {
+        document
+          .getElementById(buttons[i])
+          .addEventListener("click", () => (drawType = buttons[i]));
+      }
+
+      document
+        .getElementById("clear")
+        .addEventListener("click", () => (canvas.innerHTML = ""));
+
+      canvas.addEventListener("mousedown", handleMouseDown);
+
+      function handleMouseDown(e) {
+        document.addEventListener("mousemove", handleMouseMove);
+        document.addEventListener("mouseup", handleMouseUp);
+        const draw = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          drawType
+        );
+        let initX = e.clientX;
+        let initY = e.clientY;
+        let pathData;
+        switch (drawType) {
+          case "path":
+            pathData = `M ${initX} ${initY} `;
+            break;
+          case "line":
+            draw.setAttribute("x1", initX);
+            draw.setAttribute("y1", initY);
+            draw.setAttribute("x2", initX);
+            draw.setAttribute("y2", initY);
+            break;
+          case "rect":
+            draw.setAttribute("x", initX);
+            draw.setAttribute("y", initY);
+            break;
+          case "ellipse":
+            draw.setAttribute("cx", initX);
+            draw.setAttribute("cy", initY);
+            break;
+        }
+        canvas.appendChild(draw);
+        function handleMouseMove(e) {
+          switch (drawType) {
+            case "path":
+              let data = `M ${initX} ${initY} L ${e.clientX} ${e.clientY}`;
+              draw.setAttribute("d", data);
+            case "line":
+          }
+          let curX = e.clientX;
+          let curY = e.clientY;
+          switch (drawType) {
+            case "path":
+              pathData += `L ${curX} ${curY} `;
+              draw.setAttribute("d", pathData);
+              break;
+            case "line":
+              draw.setAttribute("x2", curX);
+              draw.setAttribute("y2", curY);
+              break;
+            case "rect":
+              draw.setAttribute("width", curX - initX);
+              draw.setAttribute("height", curY - initY);
+              break;
+            case "ellipse":
+              draw.setAttribute("rx", curX - initX);
+              draw.setAttribute("ry", curY - initY);
+              break;
+          }
+        }
+
+        function handleMouseUp(e) {
+          document.removeEventListener("mousemove", handleMouseMove);
+          document.removeEventListener("mouseup", handleMouseUp);
+        }
+      }
+    </script>
+  </body>
+</html>
