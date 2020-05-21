@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+      let data =   {
+        width: 250,
+        height: 296,
+        wordWidth: 50,
+        words: [
+            { word: "mouth", x: 13, y: 242 },
+            { word: "ear", x: 190, y: 18 },
+            { word: "hair", x: 29, y: 18 },
+            { word: "nose", x: 190, y: 231 },
+            { word: "eye", x: 16, y: 188 },
+        ]
+      }
+    </script>
+    <style>
+        .img {
+            width: 250px;
+            height: 296px;
+            margin: 30px;
+            background: url("./parts_face.png");
+            
+        }
+
+        .wrapper {
+            position: relative;
+        }
+
+        .wordsWrapper{
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .wordsWrapper > div {
+            border: 1px solid black;
+            width: 50px;
+            text-align: center;
+            user-select: none;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="img">
+
+    </div>
+    <div class="wordsWrapper">
+        <div id="word0">mouth</div>
+        <div id="word1">ear</div>
+        <div id="word2">hair</div>
+        <div id="word3">nose</div>
+        <div id="word4">eye</div>
+    </div>
+</div>
+<script>
+
+    
+    for(let i = 0; i < 5; i++){
+        document.getElementById('word' + i).addEventListener("mousedown", onMouseDown)
+    }
+
+    function onMouseDown(e){
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener("mouseup", onMouseUp);
+
+        let offsetX = e.clientX;
+        let offsetY = e.clientY;
+        let target = e.target;
+        function onMouseMove(e){
+            target.style.left = `${e.clientX - offsetX}px`;
+            target.style.top = `${e.clientY - offsetY}px`;
+        }
+
+        function onMouseUp(e){
+            target.style.left = `0px`;
+            target.style.top = `0px`;
+            document.removeEventListener("mousemove", onMouseMove);
+            document.removeEventListener("mouseup", onMouseUp);
+        }
+    }
+</script>
+</body>
+</html>
